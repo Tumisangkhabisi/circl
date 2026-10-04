@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https:; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#F3EEE4">
+<title>Circl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+<main id="main">
+
+<!-- HOME -->
+<section class="screen" id="home" aria-label="Home">
+  <div class="row sp"><div class="logo"><i></i>circl</div>
+    <div class="row g8"><button type="button" class="ib" aria-label="Search" data-go="explore" data-icon="search"></button></div></div>
+  <div class="stories" id="stories" hidden></div>
+  <div id="feed"></div>
+  <div id="feedState"></div>
+  <div id="feedEnd" style="height:1px"></div>
+</section>
+
+<!-- EXPLORE -->
+<section class="screen" id="explore" aria-label="Explore">
+  <h1>Explore</h1>
+  <label class="search"><span class="ic" data-icon="search" style="display:contents"></span><input id="q" type="search" placeholder="People, places, ideas" aria-label="Search" maxlength="80" autocomplete="off"></label>
+  <div id="trendWrap"><div class="sec"><span>Trending now</span></div><div class="trend" id="trend"></div></div>
+  <div class="sec"><span id="discTitle">Made for your orbit</span></div>
+  <div class="grid" id="orbit"></div>
+  <div id="orbitState"></div>
+  <div id="orbitEnd" style="height:1px"></div>
+</section>
+
+<!-- CREATE -->
+<section class="screen" id="create" aria-label="New post">
+  <div class="row sp"><button type="button" class="ib" aria-label="Close" data-go="home" data-icon="close"></button><b style="font-weight:500">New post</b><button type="button" class="link" id="clearDraft">Clear</button></div>
+  <div class="row g8" style="margin:16px 0 10px" id="cAuthor"></div>
+  <label class="vh" for="txt">Post text</label>
+  <textarea class="field" id="txt" maxlength="500" placeholder="What are you noticing today?"></textarea>
+  <div class="count"><span id="cnt">0</span> / 500</div>
+  <div id="pv" hidden><img id="pvImg" alt=""><button type="button" class="x" id="pvX" aria-label="Remove photo">✕</button></div>
+  <label class="lbl" id="altWrap" hidden>Alt text (describe the photo)<input class="inp" id="alt" maxlength="300" autocomplete="off"></label>
+  <div class="tools">
+    <label class="tool"><input class="vh" type="file" id="fLib" accept="image/jpeg,image/png,image/webp,image/gif"><span>🖼️</span>Library</label>
+    <label class="tool"><input class="vh" type="file" id="fCam" accept="image/*" capture="environment"><span>📷</span>Camera</label>
+  </div>
+  <div class="card" style="margin:0;padding:0">
+    <div class="opt" style="align-items:center"><label for="reply">Who can reply</label>
+      <select id="reply" class="sel"><option value="everyone">Everyone</option><option value="followers">Followers</option><option value="mentioned">Mentioned only</option></select></div>
+  </div>
+  <div class="err" id="cErr" role="alert"></div>
+  <button type="button" class="cta" id="share" disabled>Share with your circl</button>
+</section>
+
+<!-- ACTIVITY -->
+<section class="screen" id="alerts" aria-label="Activity">
+  <div class="row sp"><h1>Activity</h1><button type="button" class="ib" data-act="settings" aria-label="Settings" data-icon="gear"></button></div>
+  <div class="chips" id="fchips" role="group" aria-label="Filter activity"></div>
+  <div id="acts"></div>
+  <div id="actsState"></div>
+  <div id="actsEnd" style="height:1px"></div>
+</section>
+
+<!-- PROFILE -->
+<section class="screen" id="profile" aria-label="Profile">
+  <div id="pHead"></div>
+  <div id="pList"></div>
+  <div id="pState"></div>
+  <div id="pEnd" style="height:1px"></div>
+</section>
+
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<nav id="nav" aria-label="Primary" hidden></nav>
+
+<section id="auth" hidden aria-label="Sign in">
+  <div class="authbox">
+    <div class="logo" style="font-size:28px"><i></i>circl</div>
+    <p class="meta" style="margin:8px 0 18px">Share what you’re noticing with the people who matter.</p>
+    <div class="chips" role="group" aria-label="Mode"><button type="button" class="chip on" data-mode="login">Sign in</button><button type="button" class="chip" data-mode="register">Create account</button></div>
+    <form id="authForm">
+      <label class="lbl reg" hidden>Name<input class="inp" name="name" autocomplete="name" maxlength="50" required disabled></label>
+      <label class="lbl reg" hidden>Handle<input class="inp" name="handle" autocomplete="username" pattern="[a-z0-9_.]{3,20}" title="3–20 characters: lowercase letters, numbers, _ or ." maxlength="20" autocapitalize="none" required disabled></label>
+      <label class="lbl">Email<input class="inp" type="email" name="email" autocomplete="email" maxlength="254" required></label>
+      <label class="lbl">Password<input class="inp" type="password" name="password" minlength="8" maxlength="128" autocomplete="current-password" required></label>
+      <div class="err" id="authErr" role="alert"></div>
+      <button class="cta" type="submit" id="authBtn" style="margin-top:8px">Sign in</button>
+    </form>
+  </div>
+</section>
+
+<section id="fatal" hidden>
+  <div class="authbox state"><p id="fatalMsg">Something went wrong.</p><button type="button" class="chip" id="fatalRetry">Try again</button></div>
+</section>
+</div>
+
+<dialog id="cmDlg" class="dlg" aria-labelledby="cmT"><div class="dbox">
+  <div class="row sp"><b id="cmT" style="font-weight:500">Comments</b><button type="button" class="ib" data-close aria-label="Close" data-icon="close"></button></div>
+  <div id="cmList"></div><div id="cmState"></div>
+  <form id="cmForm" class="row g8" style="margin-top:12px"><input class="inp" id="cmIn" style="margin:0" maxlength="300" placeholder="Add a comment" aria-label="Add a comment" autocomplete="off" required><button class="pill" type="submit" id="cmBtn">Post</button></form>
+</div></dialog>
+
+<dialog id="editDlg" class="dlg" aria-labelledby="edT"><div class="dbox">
+  <div class="row sp"><b id="edT" style="font-weight:500">Edit profile</b><button type="button" class="ib" data-close aria-label="Close" data-icon="close"></button></div>
+  <form id="editForm">
+    <label class="lbl">Name<input class="inp" name="name" maxlength="50" required></label>
+    <label class="lbl">Headline<input class="inp" name="headline" maxlength="80"></label>
+    <label class="lbl">Bio<textarea class="inp" name="bio" rows="3" maxlength="160"></textarea></label>
+    <div class="err" id="editErr" role="alert"></div>
+    <button class="cta" type="submit" id="editBtn" style="margin-top:8px">Save</button>
+  </form>
+</div></dialog>
+
+<dialog id="setDlg" class="dlg" aria-labelledby="stT"><div class="dbox">
+  <div class="row sp"><b id="stT" style="font-weight:500">Settings</b><button type="button" class="ib" data-close aria-label="Close" data-icon="close"></button></div>
+  <label class="lbl" for="theme">Appearance</label>
+  <select id="theme" class="sel" style="margin-top:6px;color:var(--ink)"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+  <p class="meta" id="whoami" style="margin-top:16px"></p>
+  <button type="button" class="btn l" data-act="logout" style="width:100%;margin-top:12px">Sign out</button>
+</div></dialog>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
